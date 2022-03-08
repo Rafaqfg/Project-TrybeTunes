@@ -37,11 +37,14 @@ class Album extends React.Component {
         <ul>
           {musicsList.map(({ trackName, previewUrl }, index) => {
             if (index === 0) return false;
-            return (<MusicCard
-              key={ trackName }
-              trackName={ trackName }
-              previewUrl={ previewUrl }
-            />);
+            return (
+              <li key={ trackName }>
+                <MusicCard
+                  key={ trackName }
+                  trackName={ trackName }
+                  previewUrl={ previewUrl }
+                />
+              </li>);
           })}
         </ul>
       </div>);
