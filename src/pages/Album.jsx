@@ -35,14 +35,15 @@ class Album extends React.Component {
         <h3 data-testid="artist-name">{`${artistName}`}</h3>
         <p data-testid="album-name">{`${albumName}`}</p>
         <ul>
-          {musicsList.map(({ trackName, previewUrl }, index) => {
+          {musicsList.map(({ trackName, previewUrl, trackId }, index) => {
             if (index === 0) return false;
             return (
-              <li key={ trackName }>
+              <li key={ trackId }>
                 <MusicCard
-                  key={ trackName }
+                  key={ trackId }
                   trackName={ trackName }
                   previewUrl={ previewUrl }
+                  trackId={ trackId }
                 />
               </li>);
           })}
