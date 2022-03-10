@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import Header from '../components/Header';
 import MusicCard from '../components/MusicCard';
 import getMusics from '../services/musicsAPI';
-import { addSong, getFavoriteSongs } from '../services/favoriteSongsAPI';
+import { addSong, getFavoriteSongs, removeSong } from '../services/favoriteSongsAPI';
 import Loading from '../components/Loading';
 
 class Album extends React.Component {
@@ -51,6 +51,16 @@ class Album extends React.Component {
         });
       });
     }
+    this.setState({
+      loading: true,
+    }, async () => {
+      await removeSong(checkedSong);
+      const getSong = await getFavoriteSongs();
+      this.setState({
+        loading: false,
+        favoritesSongs: getSong,
+      });
+    });
   }
 
   render() {

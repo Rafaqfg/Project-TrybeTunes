@@ -15,7 +15,6 @@ class Search extends React.Component {
       loading: false,
       artist: '',
       albums: [],
-      // response: false,
     };
   }
 
@@ -46,7 +45,6 @@ class Search extends React.Component {
       loading: false,
       searchSubmitButtonDisabled: true,
       albums: response,
-      // response: true,
     });
   }
 
@@ -101,8 +99,8 @@ class Search extends React.Component {
                     </div>
                   </div>)}
             </div>)}
-      </div> // div pai
-    ); // return fecha aqui
+      </div>
+    );
   }
 }
 
