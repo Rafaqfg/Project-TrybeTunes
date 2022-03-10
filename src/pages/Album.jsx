@@ -18,63 +18,74 @@ class Album extends React.Component {
     };
   }
 
-  async componentDidMount() {
+  componentDidMount() {
     const { match: { params: { id } } } = this.props;
-    this.setState({ loading: true });
-    const songsList = await getMusics(id);
-    const favoritesList = await getFavoriteSongs();
-    this.setState({
-      loading: false,
-      songsList,
-      artistName: songsList[0].artistName,
-      albumName: songsList[0].collectionName,
-      favoritesSongs: [...favoritesList],
+    this.setState({ loading: true }, async () => {
+      const songsList = await getMusics(id);
+      const favoritesList = await getFavoriteSongs();
+      this.setState({
+        loading: false,
+        songsList,
+        artistName: songsList[0].artistName,
+        albumName: songsList[0].collectionName,
+        favoritesSongs: [...favoritesList],
+      });
     });
   }
 
   onClick = ({ target }) => {
-    const { songsList, favoritesSongs } = this.state;
+    const { songsList } = this.state;
     const isFavoriteSong = target.checked;
-    let songId;
+    const checkedSong = songsList
+      .filter(({ trackId }) => trackId === Number(target.id))
+      .reduce((acc) => [acc]);
     if (isFavoriteSong) {
-      const checkedSong = songsList
-        .filter(({ trackId }) => trackId === Number(target.id))
-        .reduce((acc) => [acc]);
-      songId = checkedSong;
-      this.setState({ favoritesSongs: [...favoritesSongs, checkedSong] });
-    }
-    this.setState({ loading: true },
-      async () => {
-        await addSong(songId);
-        this.setState({ loading: false });
+      this.setState({
+        loading: true,
+      }, async () => {
+        await addSong(checkedSong);
+        const getSong = await getFavoriteSongs();
+        this.setState({
+          loading: false,
+          favoritesSongs: getSong,
+        });
       });
+    }
   }
 
   render() {
     const { artistName, songsList, albumName, loading, favoritesSongs } = this.state;
-    if (loading) return <Loading />;
     return (
-      <div data-testid="page-album">
-        <Header />
-        <h3 data-testid="artist-name">{`${artistName}`}</h3>
-        <p data-testid="album-name">{`${albumName}`}</p>
-        <ul>
-          {songsList.map(({ trackName, previewUrl, trackId }, index) => {
-            if (!index) return false;
-            return (
-              <li key={ trackId }>
-                <MusicCard
-                  key={ trackId }
-                  trackName={ trackName }
-                  previewUrl={ previewUrl }
-                  trackId={ trackId }
-                  handleInputChange={ this.onClick }
-                  isChecked={ favoritesSongs.some((song) => song.trackId === trackId) }
-                />
-              </li>);
-          })}
-        </ul>
-      </div>);
+      <div>
+        <div data-testid="page-album">
+          <Header />
+        </div>
+        { loading
+          ? <Loading />
+          : (
+            <div>
+              <div>
+                <h3 data-testid="artist-name">{`${artistName}`}</h3>
+                <p data-testid="album-name">{`${albumName}`}</p>
+              </div>
+              <ul>
+                {songsList.map(({ trackName, previewUrl, trackId }) => (
+                  !trackId
+                    ? ''
+                    : (
+                      <MusicCard
+                        key={ trackId }
+                        trackName={ trackName }
+                        previewUrl={ previewUrl }
+                        trackId={ trackId }
+                        handleInputChange={ this.onClick }
+                        isChecked={ favoritesSongs
+                          .some((song) => song.trackId === trackId) }
+                      />)))}
+              </ul>
+            </div>)}
+      </div>
+    );
   }
 }
 

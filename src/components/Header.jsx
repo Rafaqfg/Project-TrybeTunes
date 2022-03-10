@@ -16,14 +16,15 @@ class Header extends React.Component {
     this.handleUser();
   }
 
-  handleUser = async () => {
+  handleUser = () => {
     this.setState({
       loading: true,
-    });
-    const userInfo = await getUser();
-    this.setState({
-      name: userInfo.name,
-      loading: false,
+    }, async () => {
+      const userInfo = await getUser();
+      this.setState({
+        name: userInfo.name,
+        loading: false,
+      });
     });
   }
 
