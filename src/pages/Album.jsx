@@ -50,17 +50,18 @@ class Album extends React.Component {
           favoritesSongs: getSong,
         });
       });
-    }
-    this.setState({
-      loading: true,
-    }, async () => {
-      await removeSong(checkedSong);
-      const getSong = await getFavoriteSongs();
+    } else {
       this.setState({
-        loading: false,
-        favoritesSongs: getSong,
+        loading: true,
+      }, async () => {
+        await removeSong(checkedSong);
+        const getSong = await getFavoriteSongs();
+        this.setState({
+          loading: false,
+          favoritesSongs: getSong,
+        });
       });
-    });
+    }
   }
 
   render() {
