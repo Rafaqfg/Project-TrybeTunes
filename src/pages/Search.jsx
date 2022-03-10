@@ -53,52 +53,56 @@ class Search extends React.Component {
   render() {
     const { search, searchSubmitButtonDisabled,
       loading, artist, albums } = this.state;
-    if (loading) return <Loading />;
     return (
-      <div data-testid="page-search">
-        <Header />
-        <form action="">
-          <label htmlFor="searchArtist">
-            Pesquise por banda ou artista:
-            <input
-              type="text"
-              id="searchArtist"
-              placeholder="Insira banda ou artista"
-              data-testid="search-artist-input"
-              value={ search }
-              onChange={ this.handleChange }
-            />
-          </label>
-          <button
-            data-testid="search-artist-button"
-            disabled={ searchSubmitButtonDisabled }
-            type="submit"
-            onClick={ this.handleClick }
-          >
-            Pesquisar
-          </button>
-        </form>
-        {
-          artist && albums.length <= 0
-            ? (<p>Nenhum álbum foi encontrado</p>)
-            : (
-              <div>
-                <p>
-                  Resultado de álbuns de:
-                  {` ${artist}`}
-                </p>
-                <div>
-                  {albums.map(({ collectionId, collectionName }) => (
-                    <Card
-                      key={ collectionId }
-                      collectionId={ collectionId }
-                      collectionName={ collectionName }
-                    />))}
-                </div>
-              </div>)
-        }
-      </div>
-    );
+      <div>
+        <div data-testid="page-search">
+          <Header />
+        </div>
+        {loading
+          ? <Loading />
+          : (
+            <div>
+              <form action="">
+                <label htmlFor="searchArtist">
+                  Pesquise por banda ou artista:
+                  <input
+                    type="text"
+                    id="searchArtist"
+                    placeholder="Insira banda ou artista"
+                    data-testid="search-artist-input"
+                    value={ search }
+                    onChange={ this.handleChange }
+                  />
+                </label>
+                <button
+                  data-testid="search-artist-button"
+                  disabled={ searchSubmitButtonDisabled }
+                  type="submit"
+                  onClick={ this.handleClick }
+                >
+                  Pesquisar
+                </button>
+              </form>
+              {artist && albums.length <= 0
+                ? (<p>Nenhum álbum foi encontrado</p>)
+                : (
+                  <div>
+                    <p>
+                      Resultado de álbuns de:
+                      {` ${artist}`}
+                    </p>
+                    <div>
+                      {albums.map(({ collectionId, collectionName }) => (
+                        <Card
+                          key={ collectionId }
+                          collectionId={ collectionId }
+                          collectionName={ collectionName }
+                        />))}
+                    </div>
+                  </div>)}
+            </div>)}
+      </div> // div pai
+    ); // return fecha aqui
   }
 }
 
